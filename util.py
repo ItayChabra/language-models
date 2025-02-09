@@ -1,4 +1,9 @@
-from keras.preprocessing.text import text_to_word_sequence
+import re
+def text_to_word_sequence(text):
+    text = text.lower() # Convert to lowercase 
+    text = re.sub(r'[^\w\s]', '', text) # Remove punctuation 
+    return text.split() # Split into words
+
 from keras.layers import Layer
 import keras.utils
 import keras.backend as K
@@ -6,7 +11,7 @@ import keras.backend as K
 from nltk import FreqDist
 import numpy as np
 
-from keras.preprocessing import sequence
+from keras_preprocessing.sequence import pad_sequences
 
 from scipy.misc import logsumexp
 
@@ -166,7 +171,7 @@ def batch_pad(x, batch_size, min_length=3, add_eos=False, extra_padding=0):
         mlen = max([len(l) + extra_padding for l in batch])
 
         if mlen >= min_length:
-            batch = sequence.pad_sequences(batch, maxlen=mlen, dtype='int32', padding='post', truncating='post')
+            batch = pad_sequences(batch, maxlen=mlen, dtype='int32', padding='post', truncating='post')
 
             batches.append(batch)
 
